@@ -8,7 +8,10 @@ import sys
 port_no = 5001
 selector = selectors.DefaultSelector()
 
-
+def close(_socket):
+    print('Client disconnect')
+    _socket.close()
+    selector.unregister(_socket)
 def server():
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,14 +29,14 @@ def accept_connection(server_socket):
 def send_message(client_socket):
     try:
         requset = client_socket.recv(4096)
-        print(requset.decode("utf-8"))
-        response = 'Hello world\n'.encode()
-        client_socket.send(response)
+        if requset ==b'':
+            close(client_socket)
+        else:
+            print(requset.decode())
+            response = 'Hello world'.encode("utf-8")
+            client_socket.send(response)
     except:
-        print('Client disconnect')
-        client_socket.close()
-        selector.unregister(client_socket)
-
+        close(client_socket)
 def event_lop():
     while True:
         events = selector.select()

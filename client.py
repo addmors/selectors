@@ -35,10 +35,9 @@ def receving(name, sock):
 host = '192.168.1.67'
 port = 22345
 
-server = ('91.77.244.112', 5001)
+server = ('192.168.1.67', 5001)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((host, port))
 s.setblocking(0)
 
 alias = input("Name: ")
@@ -53,14 +52,6 @@ while not shutdown:
     else:
         try:
             message = input()
-
-            # Begin
-            crypt = ""
-            for i in message:
-                crypt += chr(ord(i) ^ key)
-            message = crypt
-            # End
-
             if message != "":
                 s.sendto(("[" + alias + "] :: " + message).encode("utf-8"), server)
 
